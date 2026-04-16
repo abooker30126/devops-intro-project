@@ -200,14 +200,15 @@ AWS CLI	v2 (latest)	—
 SSM Agent	Latest snap	—
 OpenJDK	21	—
 
-Security hardening included:
 
-SSH root login disabled
+## Security hardening included:
 
-Password authentication disabled
+# -  SSH root login disabled
 
-UFW firewall enabled (SSH, Nginx, Jenkins 8080)
+# - Password authentication disabled
 
-Unattended security upgrades enabled
+# - UFW firewall enabled (SSH, Nginx, Jenkins 8080)
 
-Build artifacts cleaned from /tmp
+# - Unattended security upgrades enabled
+
+# - Build artifacts cleaned from /tmp
