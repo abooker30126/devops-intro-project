@@ -1,37 +1,51 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
+set -euxo pipefail
 
-apt-get -y install nginx
-sed -i -e '0,/root \/usr\/share\/nginx\/html/s//root \/home\/vagrant\/devops-kungfu/' /etc/nginx/sites-available/default
+echo "=== Installing Node.js 20 LTS ==="
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs build-essential
 
+echo "=== Creating application directory ==="
+sudo mkdir -p /opt/app
+sudo chown -R ubuntu:ubuntu /opt/app
 
-# install git, needed for acquiring webapp source code
-apt-get -y install git
+echo "=== Cloning application repository ==="
+sudo -u ubuntu git clone https://github.com/abooker30126/devops-intro-project.git /opt/app
 
-# remove old node just in case
-apt-get remove --purge node
+echo "=== Installing application dependencies ==="
+cd /opt/app
+sudo -u ubuntu npm install --production
 
-# application and build process required packages
-# add Node.js maintained repositories
-curl -sL https://deb.nodesource.com/setup | bash -
+echo "=== Building application ==="
+sudo -u ubuntu npm run build || true
 
-# for tests and build
-apt-get -y install nodejs
-# for phantomjs
-apt-get -y install libfontconfig1 fontconfig libfontconfig1-dev libfreetype6-dev
+echo "=== Creating systemd service for Node.js app ==="
+sudo tee /etc/systemd/system/app.service > /dev/null <<EOF
+[Unit]
+Description=Node.js Application
+After=network.target
 
-# for sass
-apt-get -y install ruby
-gem install sass
+[Service]
+WorkingDirectory=/opt/app
+ExecStart=/usr/bin/node /opt/app/server.js
+Restart=always
+RestartSec=10
+User=ubuntu
+Environment=NODE_ENV=production
 
-#for running grunt tasks manually
-npm install -g grunt-cli
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
 
-# install some additional packeges required by the app
-npm install -g lru-cache sigmund
-npm install -g accepts batch
-npm install -g qunitjs
+[Install]
+WantedBy=multi-user.target
+EOF
 
-# reload nginx to serve from the directory
-service nginx reload
+echo "=== Enabling and starting app service ==="
+sudo systemctl daemon-reload
+sudo systemctl enable app
+sudo systemctl restart app
 
-echo 'Environment is ready, you should fork and clone the repo now.'
+echo "=== Application installation complete ==="

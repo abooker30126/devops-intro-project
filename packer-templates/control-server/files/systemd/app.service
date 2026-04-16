@@ -1,0 +1,30 @@
+# /etc/systemd/system/app.service
+# Systemd unit for the control-server application
+# Adjust ExecStart to match your actual application binary/entrypoint.
+
+[Unit]
+Description=Control Server Application
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/app
+EnvironmentFile=/opt/app/config/app.env
+ExecStart=/usr/bin/node /opt/app/server.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=app
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/app/data
+
+[Install]
+WantedBy=multi-user.target
