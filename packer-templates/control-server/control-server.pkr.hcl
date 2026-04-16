@@ -23,7 +23,7 @@ variable "aws_region" {
 
 variable "instance_type" {
   type    = string
-  default = "t2.micro"
+  default = "t3.micro"
 }
 
 variable "ami_prefix" {
@@ -241,7 +241,6 @@ build {
   # ═══════════════════════════════════════════════════════════
   # PHASE 6 — Security hardening & cleanup
   # ═══════════════════════════════════════════════════════════
-
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive"
@@ -252,6 +251,8 @@ build {
       "sudo sed -i 's/^#\\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config",
       "sudo ufw allow 'Nginx Full'",
       "sudo ufw allow OpenSSH",
+      "sudo ufw allow 8080/tcp",
+      "sudo ufw allow 8080/tcp", # ← NEW: Jenkins direct access
       "echo 'y' | sudo ufw enable",
       "sudo apt-get install -y unattended-upgrades",
       "sudo dpkg-reconfigure -f noninteractive unattended-upgrades",

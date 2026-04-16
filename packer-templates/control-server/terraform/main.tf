@@ -56,6 +56,7 @@ resource "aws_security_group" "control_server" {
   description = "Security group for control-server instance"
   vpc_id      = data.aws_vpc.default.id
 
+  # SSH
   ingress {
     description = "SSH"
     from_port   = 22
@@ -64,6 +65,7 @@ resource "aws_security_group" "control_server" {
     cidr_blocks = var.allowed_ssh_cidrs
   }
 
+  # HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -72,12 +74,22 @@ resource "aws_security_group" "control_server" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # HTTPS
   ingress {
     description = "HTTPS"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Jenkins direct access (IP-locked like SSH)
+  ingress {
+    description = "Jenkins"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_ssh_cidrs
   }
 
   egress {

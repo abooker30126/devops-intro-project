@@ -10,9 +10,9 @@ variable "ami_id" {
 }
 
 variable "instance_type" {
-  description = "EC2 instance type (t2.micro = Free Tier)"
+  description = "EC2 instance type (t3.micro = Free Tier)"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "project_name" {
