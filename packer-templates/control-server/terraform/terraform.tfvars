@@ -1,4 +1,3 @@
-ami_id        = "ami-0d5aa2a118f338c9f"
 instance_type = "t3.micro"
 aws_region    = "us-east-1"
 project_name  = "control-server"
