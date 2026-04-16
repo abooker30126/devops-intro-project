@@ -4,10 +4,10 @@ set -e
 echo "=== PACKER AGGRESSIVE CLEANUP STARTED ==="
 
 ###############################################
-# 1. Delete AMI + Snapshot from manifest.json
+# 1. Delete AMI + Snapshot from packer-manifest.json
 ###############################################
-if [ -f "manifest.json" ]; then
-    AMI_ID=$(jq -r '.builds[0].artifact_id' manifest.json | cut -d':' -f2)
+if [ -f "packer-manifest.json" ]; then
+    AMI_ID=$(jq -r '.builds[0].artifact_id' packer-manifest.json | cut -d':' -f2)
 
     if [ -n "$AMI_ID" ] && [ "$AMI_ID" != "null" ]; then
         echo "[+] Deregistering AMI: $AMI_ID"
@@ -24,10 +24,10 @@ if [ -f "manifest.json" ]; then
             echo "[+] No snapshot found for AMI"
         fi
     else
-        echo "[!] No AMI ID found in manifest.json"
+        echo "[!] No AMI ID found in packer-manifest.json"
     fi
 else
-    echo "[!] manifest.json not found — skipping AMI cleanup"
+    echo "[!] packer-manifest.json not found — skipping AMI cleanup"
 fi
 
 ###############################################

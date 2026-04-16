@@ -6,7 +6,7 @@ BUILD_NAME="control.amazon-ebs.ubuntu"
 LOG_DIR="logs"
 TIMESTAMP="$(date +"%Y%m%d-%H%M%S")"
 LOG_FILE="${LOG_DIR}/build-${TIMESTAMP}.log"
-TFVARS_FILE="terraform.auto.tfvars.json"
+TFVARS_FILE="terraform/terraform.auto.tfvars.json"
 
 usage() {
   echo "Usage: $0 {fmt|validate|build|build-only|debug|clean|tf-init|tf-plan|tf-apply|build-and-apply}"
@@ -76,21 +76,21 @@ clean() {
 }
 
 tf_init() {
-  terraform init
+  terraform -chdir=terraform init
 }
 
 tf_plan() {
-  terraform plan
+  terraform -chdir=terraform plan
 }
 
 tf_apply() {
-  terraform apply -auto-approve
+  terraform -chdir=terraform apply -auto-approve
 }
 
 build_and_apply() {
   build
-  terraform init
-  terraform apply -auto-approve
+  terraform -chdir=terraform init
+  terraform -chdir=terraform apply -auto-approve
 }
 
 case "${1:-}" in
