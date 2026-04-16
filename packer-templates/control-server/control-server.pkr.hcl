@@ -156,7 +156,8 @@ build {
       "sudo add-apt-repository -y universe",
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
-      "sudo apt-get install -y curl wget unzip jq software-properties-common apt-transport-https ca-certificates gnupg lsb-release"
+      "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release software-properties-common wget unzip jq ssl-cert",
+      "sudo mkdir -p /opt/app && sudo chown ${var.ssh_username}:${var.ssh_username} /opt/app"
     ]
   }
 
@@ -251,7 +252,6 @@ build {
       "sudo sed -i 's/^#\\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config",
       "sudo ufw allow 'Nginx Full'",
       "sudo ufw allow OpenSSH",
-      "sudo ufw allow 8080/tcp",
       "sudo ufw allow 8080/tcp", # ← NEW: Jenkins direct access
       "echo 'y' | sudo ufw enable",
       "sudo apt-get install -y unattended-upgrades",
