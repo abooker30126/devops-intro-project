@@ -199,7 +199,7 @@ build {
   }
 
   # ═══════════════════════════════════════════════════════════
-  # PHASE 5 — Install Docker, AWS CLI, SSM Agent
+  # PHASE 5 — Install Docker, AWS CLI, SSM Agent, Jenkins
   # ═══════════════════════════════════════════════════════════
 
   provisioner "shell" {
@@ -238,6 +238,52 @@ build {
       "sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service"
     ]
   }
+
+  # ═══════════════════════════════════════════════════════════
+  # PHASE 5d — Install Jenkins
+  # ═══════════════════════════════════════════════════════════
+
+  provisioner "shell" {
+    environment_vars = [
+      "DEBIAN_FRONTEND=noninteractive"
+    ]
+    inline = [
+      "echo '>>> Phase 5d: Install Jenkins'",
+
+      "# Install Java 21 (Jenkins dependency)",
+      "sudo apt-get install -y fontconfig openjdk-21-jre",
+
+      "# Create Jenkins user and directories",
+      "sudo useradd -r -s /bin/false -d /var/lib/jenkins jenkins",
+      "sudo mkdir -p /var/lib/jenkins /var/log/jenkins /usr/share/java",
+      "sudo chown jenkins:jenkins /var/lib/jenkins /var/log/jenkins",
+
+      "# Download Jenkins WAR (GitHub mirror — CDN unreliable)",
+      "sudo wget -q -O /usr/share/java/jenkins.war https://github.com/jenkinsci/jenkins/releases/download/jenkins-2.558/jenkins.war",
+      "ls -lh /usr/share/java/jenkins.war",
+
+      "# Create systemd service",
+      "cat <<'UNIT' | sudo tee /etc/systemd/system/jenkins.service",
+      "[Unit]",
+      "Description=Jenkins Automation Server",
+      "After=network.target",
+      "",
+      "[Service]",
+      "Type=simple",
+      "User=jenkins",
+      "Environment=JENKINS_HOME=/var/lib/jenkins",
+      "ExecStart=/usr/bin/java -jar /usr/share/java/jenkins.war --httpPort=8080",
+      "Restart=on-failure",
+      "",
+      "[Install]",
+      "WantedBy=multi-user.target",
+      "UNIT",
+
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable jenkins"
+    ]
+  }
+
 
   # ═══════════════════════════════════════════════════════════
   # PHASE 6 — Security hardening & cleanup

@@ -1,4 +1,4 @@
-instance_type = "t3.micro"
+instance_type = "m7i-flex.large"
 aws_region    = "us-east-1"
 project_name  = "control-server"
 environment   = "dev"
