@@ -1,6 +1,6 @@
 # DevOps Intro Project
 
-A hands-on practice project for learning core DevOps concepts including infrastructure automation, virtual machine provisioning, and continuous integration. Built as part of Udacity's Intro to DevOps Nanodegree program.
+I built this as part of Udacity's Intro to DevOps Nanodegree program (Master's in Artificial Intelligence core). A hands-on practice project for learning core DevOps concepts including infrastructure automation, virtual machine provisioning, and continuous integration. 
 
 > **⏱ Estimated Time:** 2–4 hours to complete all parts  
 > **📌 Status:** This project uses Ubuntu 14.04 (Trusty) in its Packer templates. Ubuntu 14.04 reached end-of-life in April 2019. The project is preserved for educational purposes; see the [Troubleshooting](#troubleshooting) section for guidance on updating to a newer Ubuntu release.
