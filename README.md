@@ -9,6 +9,7 @@ I built this as part of Udacity's Intro to DevOps Nanodegree program (Master's i
 
 ## Table of Contents
 
+- [Repository Structure](#repository-structure)
 - [Project Overview](#project-overview)
 - [Prerequisites](#prerequisites)
 - [Setting up your local machine](#setting-up-your-local-machine)
@@ -17,6 +18,41 @@ I built this as part of Udacity's Intro to DevOps Nanodegree program (Master's i
 - [Troubleshooting](#troubleshooting)
 - [Expected Learning Outcomes](#expected-learning-outcomes)
 - [About Me](#about-me)
+
+---
+
+## Repository Structure
+
+```
+devops-intro-project/
+├── .gitignore
+├── CODEOWNERS
+├── README.md
+├── jenkins-config/
+│   ├── config.xml
+│   ├── example-job.tar.gz
+│   ├── install_jenkins_plugins.sh
+│   ├── jenkins
+│   └── users/
+│       └── vagrant/
+│           └── config.xml
+└── packer-templates/
+    ├── application-server.json
+    ├── control-server.json
+    ├── http/
+    │   └── preseed.cfg
+    ├── scripts/
+    │   ├── application.sh
+    │   ├── cleanup.sh
+    │   ├── graphite.sh
+    │   ├── jenkins.sh
+    │   ├── nginx.sh
+    │   ├── update.sh
+    │   ├── vagrant.sh
+    │   └── virtualbox.sh
+    └── virtualbox/
+        └── Vagrantfile
+```
 
 ---
 
