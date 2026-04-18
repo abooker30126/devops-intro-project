@@ -1,0 +1,26 @@
+# .gpg-ignore — Patterns for files and directories to skip during GPG signing.
+#
+# Syntax: one pattern per line, using shell glob wildcards.
+# Blank lines and lines starting with # are ignored.
+#
+# Examples:
+#   vendor/**        — skip everything under a vendor directory
+#   *.generated.sh   — skip auto-generated shell scripts
+#   tests/**         — skip test files
+
+# Third-party / vendored code
+vendor/**
+node_modules/**
+
+# Build artifacts and generated files
+dist/**
+build/**
+*.generated.*
+*.min.*
+
+# Packer cache
+packer_cache/**
+
+# Editor / OS artifacts
+.DS_Store
+*.swp
