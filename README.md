@@ -113,33 +113,6 @@ Immutable AWS infrastructure using **Packer** for AMI builds and **Terraform** f
 
 ---
 
-## Repository Structure
-
-devops-intro-project/
-├── packer-templates/
-│   └── control-server/
-│       ├── build.sh                    # Build automation script
-│       ├── control-server.pkr.hcl      # Packer HCL2 template
-│       ├── variables.pkr.hcl           # Packer variable definitions
-│       ├── builders/                   # Builder configs
-│       ├── files/                      # Files staged into AMI
-│       │   ├── nginx/                  # Nginx configs and snippets
-│       │   ├── app/                    # Application configs
-│       │   ├── systemd/               # Systemd unit files
-│       │   └── scripts/               # Utility scripts
-│       ├── provisioners/              # Provisioner configs
-│       ├── scripts/                   # Build-time scripts
-│       ├── logs/                      # Build logs (auto-generated)
-│       └── terraform/                 # Infrastructure deployment
-│           ├── main.tf
-│           ├── variables.tf
-│           ├── terraform.tfvars
-│           └── terraform.auto.tfvars.json  # AMI ID (auto-generated)
-├── jenkins-config/                    # Jenkins configuration files
-└── .github/                           # GitHub workflows
-
----
-
 ## Quick Start
 
 ```bash
