@@ -1,4 +1,9 @@
 .DS_Store
 packer_cache
 packer-templates/virtualbox/
+<<<<<<< HEAD
 devops-kungfu/
+=======
+devops-kungfu/
+gpg-resign-temp/
+>>>>>>> bd943412ed4e132961ed0e359542dd68dff18cd6

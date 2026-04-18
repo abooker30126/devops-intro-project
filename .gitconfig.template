@@ -1,0 +1,31 @@
+# Git configuration template for GPG commit signing
+#
+# Copy the relevant sections into your ~/.gitconfig or run the commands below
+# to configure GPG signing for this repository.
+#
+# Replace YOUR_GPG_KEY_ID with your actual GPG key ID. To find it, run:
+#   gpg --list-secret-keys --keyid-format=long
+# The key ID is the 16-character hex string after "sec   rsa.../".
+#
+# Quick setup (run these commands in your terminal):
+#
+#   git config --global user.name "Your Name"
+#   git config --global user.email "your@email.com"
+#   git config --global user.signingkey YOUR_GPG_KEY_ID
+#   git config --global commit.gpgsign true
+#   git config --global gpg.program gpg
+#
+# To export your public key for uploading to GitHub:
+#   gpg --armor --export YOUR_GPG_KEY_ID
+#
+
+[user]
+    name = Your Name
+    email = your@email.com
+    signingkey = YOUR_GPG_KEY_ID
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    program = gpg
