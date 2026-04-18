@@ -73,7 +73,7 @@ I’m always open to collaborating on AI security, cloud engineering, or autonom
 If you’re working on something in that space, I’d love to talk.
 
 ------------------------------------------------------------------------------------------------------------------------
-# DevSecOps Control Server — Infrastructure as Code
+# DevSecOps JENKINS CI/CD Control Server — Infrastructure as Code 
 
 Immutable AWS infrastructure using **Packer** for AMI builds and **Terraform** for deployment. Builds a hardened Ubuntu 22.04 control server with Nginx, Docker, Jenkins, AWS CLI, and SSM Agent baked into the image.
 
