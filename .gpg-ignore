@@ -21,6 +21,6 @@ build/**
 # Packer cache
 packer_cache/**
 
-# Editor / OS artefacts
+# Editor / OS artifacts
 .DS_Store
 *.swp

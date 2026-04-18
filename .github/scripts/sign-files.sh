@@ -98,6 +98,19 @@ if [[ -n "${GPG_PASSPHRASE:-}" ]]; then
 fi
 
 # --------------------------------------------------------------------------- #
+# Helper: invoke gpg with or without passphrase piped on stdin
+# --------------------------------------------------------------------------- #
+
+sign_file() {
+  local sig_path="$1" full_path="$2"
+  if [[ -n "${GPG_PASSPHRASE:-}" ]]; then
+    echo "$GPG_PASSPHRASE" | gpg "${GPG_OPTS[@]}" --output "$sig_path" "$full_path"
+  else
+    gpg "${GPG_OPTS[@]}" --output "$sig_path" "$full_path"
+  fi
+}
+
+# --------------------------------------------------------------------------- #
 # Sign each file
 # --------------------------------------------------------------------------- #
 
@@ -125,20 +138,11 @@ for FILE in "${FILES[@]}"; do
 
   log "Signing: $FILE → ${FILE}.gpg.sig"
 
-  if [[ -n "${GPG_PASSPHRASE:-}" ]]; then
-    if echo "$GPG_PASSPHRASE" | gpg "${GPG_OPTS[@]}" --output "$SIG_PATH" "$FULL_PATH"; then
-      (( SIGNED++ )) || true
-    else
-      warn "Failed to sign: $FILE"
-      (( FAILED++ )) || true
-    fi
+  if sign_file "$SIG_PATH" "$FULL_PATH"; then
+    (( SIGNED++ )) || true
   else
-    if gpg "${GPG_OPTS[@]/"--passphrase-fd 0"/}" --output "$SIG_PATH" "$FULL_PATH"; then
-      (( SIGNED++ )) || true
-    else
-      warn "Failed to sign: $FILE"
-      (( FAILED++ )) || true
-    fi
+    warn "Failed to sign: $FILE"
+    (( FAILED++ )) || true
   fi
 done
 
