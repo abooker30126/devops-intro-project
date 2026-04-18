@@ -127,8 +127,8 @@ A successful verification looks like:
 
 ```
 gpg: Signature made Mon Apr 18 19:00:00 2024 UTC
-gpg:                using RSA key C8040559438A554CAD747154B732B308C0FE0BB3
-gpg: Good signature from "Anthony Booker <tony@example.com>" [ultimate]
+gpg:                using RSA key XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+gpg: Good signature from "Your Name <your@email.com>" [ultimate]
 ```
 
 ### Verify all signature files in the repository
