@@ -1,54 +1,38 @@
 # Copilot instructions — devops-intro-project
 
-Purpose
-- Short guide for Copilot sessions to find build/test/lint commands, understand the top-level architecture, and respect repo conventions.
+## Build, test, and lint commands
 
-1) Build, test, and lint commands
-- Packer image build (local):
-  - cd packer-templates
-  - packer build -only=virtualbox-iso application-server.json
-  - (control server): packer build control-server.json
-- Vagrant (local VM testing):
-  - cd packer-templates/virtualbox
-  - vagrant box add ubuntu-14.04.6-server-amd64-appserver_virtualbox.box --name devops-appserver
-  - vagrant up && vagrant ssh
-- Inside the VM (web app testing flow used in README):
-  - git clone https://github.com/chef/devops-kungfu.git devops-kungfu
-  - cd devops-kungfu
-  - sudo npm install
-  - Run tests: grunt -v  # runs the test suite from the app repo
-- Single-test guidance:
-  - This repo does not provide a per-test runner script. For a single test in the web app, invoke the app's underlying test runner directly (e.g., node ./node_modules/.bin/mocha test/path/to/file.js) from the app folder, or add a Grunt task if needed.
-- Linting: No project-wide linter or lint commands detected in this repository. If linting is later added, include the top-level command and a per-file/per-rule invocation.
+| Purpose | Command | Notes |
+| --- | --- | --- |
+| Format the active Packer/Terraform workspace | `cd packer-templates/control-server && ./build.sh fmt` | Runs `packer fmt -recursive .` |
+| Validate the active control-server AMI template | `cd packer-templates/control-server && ./build.sh validate` | Validates `control-server.pkr.hcl` |
+| Build the control-server AMI | `cd packer-templates/control-server && ./build.sh build` | Produces `packer-manifest.json`, extracts the AMI ID with `jq`, and writes `terraform/terraform.auto.tfvars.json` |
+| Build only the named Packer source | `cd packer-templates/control-server && ./build.sh build-only` | Uses `BUILD_NAME=control.amazon-ebs.ubuntu` from `build.sh` |
+| Run a verbose/debug build | `cd packer-templates/control-server && ./build.sh debug` | Enables `PACKER_LOG` and writes logs under `logs/` |
+| Initialize Terraform for the control server | `cd packer-templates/control-server && ./build.sh tf-init` | Wraps `terraform -chdir=terraform init` |
+| Preview Terraform changes | `cd packer-templates/control-server && ./build.sh tf-plan` | Wraps `terraform -chdir=terraform plan` |
+| Apply Terraform changes | `cd packer-templates/control-server && ./build.sh tf-apply` | Wraps `terraform -chdir=terraform apply -auto-approve` |
+| Build the AMI and launch the EC2 instance | `cd packer-templates/control-server && ./build.sh build-and-apply` | End-to-end path for the current AWS control-server flow |
+| Build the legacy/sample AWS app image | `cd packer-templates/aws/Launch_EC2_Using_Your_Packer_AMI && packer build application-server.pkr.hcl` | Older sample area; `application-server.json` is also present there |
+| Verify one generated file signature | `gpg --verify path/to/file.gpg.sig path/to/file` | Matches the signing workflow documented in `.github/SECURITY_KEYS.md` |
 
-2) High-level architecture (big picture)
-- Purpose: Teaching/practice repo for building VM images and provisioning local VMs for a sample web app.
-- Packer templates (packer-templates/): contain JSON templates (application-server.json, control-server.json) and provisioning scripts (packer-templates/scripts/) that install services (nginx, jenkins, graphite, app setup, etc.).
-- VirtualBox/Vagrant (packer-templates/virtualbox): Vagrantfile for testing built boxes locally.
-- Jenkins config (jenkins-config/): holds config.xml, user config, and install_jenkins_plugins.sh. Used to seed Jenkins instance configuration in the images or as a reference.
-- Workflow summary:
-  1. Update PACKER_BOX_NAME / iso_checksum in templates for desired Ubuntu release
-  2. packer build -> creates a box
-  3. vagrant (or other consumer) uses box; VM boots and runs provisioning scripts
-  4. Inside VM, clone sample web app (devops-kungfu) and run app-specific installs/tests
+No in-repo automated test suite or standalone linter was found. There is also no in-repo single-test command today. The README still documents an older `grunt -v` exercise against an external cloned app; treat that as legacy training material, not a test suite for this repository.
 
-3) Key conventions and repo-specific notes
-- Template edits:
-  - When updating Ubuntu image/version, edit PACKER_BOX_NAME and iso_checksum directly in the relevant template file(s).
-- Scripts layout:
-  - packer-templates/scripts/ is organized by service; script names map to services called by the JSON templates. Keep names stable so templates continue to reference them correctly.
-- Jenkins configuration:
-  - jenkins-config/ contains XML job/user configs and an installer script for plugins. Treat XML here as canonical for seeding Jenkins in images.
-- Legacy OS note:
-  - Templates target Ubuntu 14.04 (trusty). README notes these may be out-of-date; verify and update iso/checksums before building.
-- Ownership / reviewers:
-  - CODEOWNERS points at @udacity/active-public-content; use that for suggested reviewers on PRs.
+## High-level architecture
 
-4) Other docs and AI assistant configs
-- Source used: README.md (root). No existing .github/copilot-instructions.md detected prior to this file creation.
-- No repository CLAUDE.md, .cursorrules, AGENTS.md, .windsurfrules, CONVENTIONS.md, or AIDER_CONVENTIONS.md were found. If added later, include relevant operational snippets here.
+- The current source of truth is `packer-templates/control-server/`. `control-server.pkr.hcl` builds an Ubuntu 22.04 AMI in ordered phases: upload staged assets from `files/`, install base packages, install and configure Nginx, install Docker/AWS CLI/SSM/Jenkins, then harden the instance and emit `packer-manifest.json`.
+- `packer-templates/control-server/build.sh` is the operational entrypoint. It wraps Packer and Terraform, extracts the AMI ID from `packer-manifest.json`, writes `terraform/terraform.auto.tfvars.json`, and then drives the Terraform deployment in `packer-templates/control-server/terraform/`.
+- `packer-templates/control-server/terraform/` launches the EC2 instance from the Packer-built AMI and owns the surrounding AWS resources: key pair, security group, IAM role/profile, root volume settings, IMDSv2 enforcement, and `user_data`.
+- Runtime configuration is staged under `packer-templates/control-server/files/`: Nginx config, app config, systemd units, and helper scripts are copied into the image first and then installed into final paths during the Packer build.
+- `.github/workflows/gpg-sign-files.yml` plus `.github/scripts/setup-gpg.sh` and `.github/scripts/sign-files.sh` form a separate repository-security path: PRs sign modified `.sh`, `.py`, `.yml`, and `.tf` files and commit sibling `.gpg.sig` artifacts.
+- `packer-templates/aws/Launch_EC2_Using_Your_Packer_AMI/` is a legacy/sample AWS Packer area with older JSON/HCL templates and a checked-in manifest. The root README still reflects that older learning flow in places, so prefer the control-server workspace when working on the current implementation.
 
-Contacts & quick pointers for Copilot
-- Focus on packer-templates/ and jenkins-config/ for infra changes.
-- If asked about running tests, point users to the README flow (build box -> vagrant -> clone app -> npm install -> grunt -v).
+## Key conventions
 
+- Treat `packer-templates/control-server/control-server.pkr.hcl` as the active build definition. `build.sh` points directly at that file, so edits to adjacent `builders/` or `provisioners/` fragments do not affect the default build path unless the invocation changes.
+- When changing runtime behavior, prefer editing staged assets in `packer-templates/control-server/files/` over embedding more inline shell in the Packer template. Phase 1 uploads those assets; Phase 4 copies them into `/etc/nginx`, `/opt/app/config`, `/etc/systemd/system`, and `/opt/scripts`.
+- Do not rename or remove `packer-manifest.json` or `terraform/terraform.auto.tfvars.json` without updating `build.sh`; the script depends on those exact paths to pass the AMI ID from Packer into Terraform.
+- Keep generated artifacts untracked. `.gitignore` already excludes Packer logs, `*.box`, manifests, Terraform state/plan files, and local `terraform.tfvars` overrides.
+- If you modify `.sh`, `.py`, `.yml`, or `.tf` files outside `.github/`, expect the PR workflow to generate or refresh sibling `.gpg.sig` files unless the path is excluded in `.gpg-ignore`.
+- Use `packer-templates/control-server/terraform/terraform.tfvars.example` as the template for local values such as `public_key` and `allowed_ssh_cidrs`; do not commit real public keys or broaden SSH/Jenkins CIDRs casually.
+- Prefer AWS and Terraform MCP servers for infrastructure investigation, and GitHub MCP for workflow and CI/debugging tasks.
