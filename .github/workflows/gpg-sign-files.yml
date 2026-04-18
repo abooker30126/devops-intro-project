@@ -45,6 +45,7 @@ jobs:
         if: steps.changed-files.outputs.files != ''
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_TTY: /dev/null
         run: |
           bash .github/scripts/sign-files.sh "${{ steps.changed-files.outputs.files }}"
 
