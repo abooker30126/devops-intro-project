@@ -28,7 +28,7 @@ Hands‑on labs in AI forensics, container vulnerabilities, and cloud incident r
 
 Exploring PyRIT (Azure) and other automated AI risk‑identification and offensive testing  frameworks
 
-Building and securing custom unmanned FPV drone systems platforms (part 107 certified remote pilot)
+Building and securing custom unmanned FPV drone systems platforms (FAA part 107 certified remote pilot)
 
 Developing automation workflows for security operations
 
