@@ -33,9 +33,6 @@ Building and securing custom unmanned FPV drone systems platforms (part 107 cert
 Developing automation workflows for security operations
 
 
-
-
-
 🧠 Technical Interests
 AI/ML Security
 
