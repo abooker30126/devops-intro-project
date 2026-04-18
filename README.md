@@ -21,16 +21,19 @@ Automation, scripting, and workflow orchestration
 My long‑term mission is to help shape the future of secure autonomous flight, ensuring that AI‑driven systems are resilient, trustworthy, and safe.
 
 
-🚀 What I’m Working On
+🚀 What I’m Working On...
 Advancing my graduate research in autonomous vehicle flight security
 
 Hands‑on labs in AI forensics, container vulnerabilities, and cloud incident response
 
-Exploring PyRIT and other AI risk‑identification frameworks
+Exploring PyRIT (Azure) and other automated AI risk‑identification and offensive testing  frameworks
 
-Building and securing custom drone platforms
+Building and securing custom unmanned FPV drone systems platforms (part 107 certified remote pilot)
 
 Developing automation workflows for security operations
+
+
+
 
 
 🧠 Technical Interests
