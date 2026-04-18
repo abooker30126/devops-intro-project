@@ -18,6 +18,7 @@ Automation, scripting, and workflow orchestration
 
 My long‑term mission is to help shape the future of secure autonomous flight, ensuring that AI‑driven systems are resilient, trustworthy, and safe.
 
+
 🚀 What I’m Working On
 Advancing my graduate research in autonomous vehicle flight security
 
@@ -28,6 +29,7 @@ Exploring PyRIT and other AI risk‑identification frameworks
 Building and securing custom drone platforms
 
 Developing automation workflows for security operations
+
 
 🧠 Technical Interests
 AI/ML Security
@@ -44,11 +46,13 @@ Threat modeling for AI workloads
 
 Secure MLOps pipelines
 
+
 🛠️ Tools & Technologies
 Security & Cloud: Prisma (AIRS), XSOAR‑style automation, container security, API gateways
 AI & Data: Python, PyTorch, LLM evaluation, AI forensics
 Automation: Scripting, workflow engines, CI/CD
 Hardware & Flight: Custom drone builds, flight controllers, telemetry systems
+
 
 🥁 Outside of Tech
 When I’m not deep in AI security, you’ll probably find me:
@@ -60,6 +64,7 @@ Building and flying drones — experimenting with autonomous flight, sensors, an
 Learning new ways to merge AI with real‑world robotics
 
 These hobbies fuel my curiosity and directly influence my work in autonomous systems.
+
 
 📫 Let’s Connect
 I’m always open to collaborating on AI security, cloud engineering, or autonomous systems projects.
