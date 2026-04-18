@@ -6,7 +6,7 @@
       <collapsed/>
     </hudson.model.PaneStatusProperties>
     <jenkins.security.ApiTokenProperty>
-      <apiToken>V8cV51L3v7lq2uod2p5xbOwn0GxrJoNPSornUYQYayIEWYF/dchH4YoKFQjzb+5T</apiToken>
+      <apiToken>REPLACE_WITH_GENERATED_API_TOKEN</apiToken>
     </jenkins.security.ApiTokenProperty>
     <com.cloudbees.plugins.credentials.UserCredentialsProvider_-UserCredentialsProperty plugin="credentials@1.22">
       <domainCredentialsMap class="hudson.util.CopyOnWriteMap$Hash"/>
@@ -26,7 +26,7 @@
       <insensitiveSearch>false</insensitiveSearch>
     </hudson.search.UserSearchProperty>
     <hudson.security.HudsonPrivateSecurityRealm_-Details>
-      <passwordHash>#jbcrypt:$2a$10$3V64mHRyKOFTaslpsvCMHenxBy8doTcqfuU.GiQ8OanNW.YoaAjfi</passwordHash>
+      <passwordHash>REPLACE_WITH_BCRYPT_HASH_OF_YOUR_PASSWORD</passwordHash>
     </hudson.security.HudsonPrivateSecurityRealm_-Details>
     <hudson.tasks.Mailer_-UserProperty plugin="mailer@1.15">
       <emailAddress>example@example.com</emailAddress>

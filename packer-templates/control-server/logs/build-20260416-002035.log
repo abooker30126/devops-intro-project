@@ -1,1 +1,0 @@
-1776313235,,ui,error,Error: Undefined -var variable\n\nA "timestamp" variable was passed in the command line but was not found in known\nvariables. To declare variable "timestamp"%!(PACKER_COMMA) place this block in one of your .pkr\nfiles%!(PACKER_COMMA) such as variables.pkr.hcl\n\n

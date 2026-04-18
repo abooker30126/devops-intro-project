@@ -3,3 +3,29 @@ packer_cache
 packer-templates/virtualbox/
 devops-kungfu/
 gpg-resign-temp/
+
+# Vagrant boxes (large binary artifacts — build locally with Packer)
+*.box
+
+# Packer build logs (generated at build time by build.sh)
+packer-templates/control-server/logs/
+
+# Packer / Terraform generated manifests
+packer-manifest.json
+manifest.json
+
+# Terraform state and plan files
+*.tfstate
+*.tfstate.backup
+*.tfplan
+crash.log
+crash.*.log
+
+# Terraform auto-populated var files written by build.sh
+terraform.auto.tfvars.json
+
+# Personal Terraform variable overrides (use terraform.tfvars.example as template)
+packer-templates/control-server/terraform/terraform.tfvars
+
+# Vendored/downloaded binaries that must not be committed
+AWSCLIV2.pkg
