@@ -125,7 +125,7 @@ find_unsigned_commits() {
 
     log_info "Finding commits for target files in $repo..."
 
-    local count
+    local count=0
     for file in $files_str; do
         if [ -f "$file" ]; then
             count=$(git log --format='%H' -- "$file" 2>/dev/null | wc -l)
@@ -211,7 +211,7 @@ push_changes() {
         printf "Continue? (yes/no): "
         read -r response
         case "$response" in
-            yes|YES)
+            y|Y|yes|YES)
                 ;;
             *)
                 log_info "Push cancelled"
@@ -293,7 +293,9 @@ main() {
 }
 
 cleanup_on_exit() {
-    rm -rf "$REPOS_DIR" 2>/dev/null || true
+    if [ -d "$REPOS_DIR" ]; then
+        rm -rf "$REPOS_DIR" || log_warning "Cleanup of $REPOS_DIR failed"
+    fi
 }
 
 trap cleanup_on_exit EXIT
