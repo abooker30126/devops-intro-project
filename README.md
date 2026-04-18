@@ -1,5 +1,7 @@
 👋 Hi, I’m Tony Booker
+
 AI Security • Cloud Security • Autonomous Systems • Drone Engineering
+
 I’m a security‑minded engineer pursuing my Master’s in Artificial Intelligence, specializing in autonomous vehicle flight security. My work sits at the intersection of AI, cloud security, and autonomous systems, where I focus on securing next‑generation workloads — from LLM pipelines to autonomous flight platforms.
 
 I’m currently building skills and projects around:
