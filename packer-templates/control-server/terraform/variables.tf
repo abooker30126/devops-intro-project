@@ -10,7 +10,7 @@ variable "ami_id" {
 }
 
 variable "instance_type" {
-  description = "EC2 instance type (m7i-flex.large = Free Tier)"
+  description = "EC2 instance type"
   type        = string
   default     = "m7i-flex.large"
 }
@@ -39,7 +39,6 @@ variable "public_key" {
 }
 
 variable "allowed_ssh_cidrs" {
-  description = "CIDR blocks allowed to SSH — lock to your IP in production"
+  description = "CIDR blocks allowed to SSH — lock to your IP in production (e.g. [\"1.2.3.4/32\"])"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
 }

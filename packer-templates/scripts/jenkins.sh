@@ -1,7 +1,15 @@
 #!/bin/bash -eux
 
-# JDK and JRE are required for Jenkins
-apt-get install -y software-properties-common # Installs add-apt-repository in 14.04
+# NOTE: This script is part of the legacy Ubuntu 14.04 (EOL) build.
+# Ubuntu 14.04 uses Upstart rather than systemd; Jenkins is started via
+# an Upstart configuration installed alongside the WAR.
+
+# Jenkins version — pinned to match the modern control-server template
+JENKINS_VERSION="2.558"
+JENKINS_WAR_URL="https://github.com/jenkinsci/jenkins/releases/download/jenkins-${JENKINS_VERSION}/jenkins.war"
+
+# JDK 8 is the highest version available by default on Ubuntu 14.04
+apt-get install -y software-properties-common
 add-apt-repository ppa:openjdk-r/ppa
 apt-get update
 apt-get install -y \
@@ -12,16 +20,33 @@ apt-get install -y \
   zip \
   unzip
 
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
-    /etc/apt/sources.list.d/jenkins.list'
+# Create Jenkins user, directories, and WAR location
+useradd -r -s /bin/false -d /var/lib/jenkins jenkins || true
+mkdir -p /var/lib/jenkins /var/log/jenkins /usr/share/java
+chown -R jenkins:jenkins /var/lib/jenkins /var/log/jenkins
 
-apt-get update
-apt-get install -y jenkins
-apt-get upgrade
+# Download pinned Jenkins WAR
+wget -q -O /usr/share/java/jenkins.war "${JENKINS_WAR_URL}"
+chmod 644 /usr/share/java/jenkins.war
+chown root:root /usr/share/java/jenkins.war
+
+# Create Upstart init configuration for Ubuntu 14.04
+cat <<'EOF' > /etc/init/jenkins.conf
+description "Jenkins CI Server"
+start on (net-device-up and local-filesystems and runlevel [2345])
+stop on runlevel [!2345]
+respawn
+respawn limit 15 5
+setuid jenkins
+setgid jenkins
+env JENKINS_HOME=/var/lib/jenkins
+exec /usr/bin/java -Djava.awt.headless=true \
+     -jar /usr/share/java/jenkins.war \
+     --httpPort=8080 --prefix=/jenkins
+EOF
 
 # copy premade configuration files
-# jenkins default config, to set --prefix=jenkins
+# jenkins default config (used only as documentation reference with Upstart)
 cp -f /tmp/jenkins-config/jenkins /etc/default
 # fix dos newlines for Windows users
 dos2unix /etc/default/jenkins
@@ -40,5 +65,5 @@ tar zxvf /tmp/jenkins-config/example-job.tar.gz
 # set permissions or else jenkins can't run jobs
 chown -R jenkins:jenkins /var/lib/jenkins
 
-# restart for jenkins to pick up the new configs
-service jenkins restart
+# start jenkins via Upstart
+initctl start jenkins || true

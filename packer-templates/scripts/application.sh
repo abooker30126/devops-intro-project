@@ -8,11 +8,11 @@ sed -i -e '0,/root \/usr\/share\/nginx\/html/s//root \/home\/vagrant\/devops-kun
 apt-get -y install git
 
 # remove old node just in case
-apt-get remove --purge node
+apt-get remove --purge nodejs || true
 
 # application and build process required packages
-# add Node.js maintained repositories
-curl -sL https://deb.nodesource.com/setup | bash -
+# add Node.js 18.x maintained repository (https://github.com/nodesource/distributions)
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 
 # for tests and build
 apt-get -y install nodejs
