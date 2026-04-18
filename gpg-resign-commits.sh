@@ -23,7 +23,8 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 USERNAME="abooker30126"
-REPOS_DIR="./gpg-resign-temp"
+SCRIPT_DIR="$(pwd)"
+REPOS_DIR="${SCRIPT_DIR}/gpg-resign-temp"
 FORCE_MODE=false
 REPO_ONLY=""
 
@@ -112,6 +113,11 @@ clone_or_update_repo() {
         mkdir -p "$REPOS_DIR"
         cd "$REPOS_DIR"
         git clone "git@github.com:${USERNAME}/${repo}.git"
+    fi
+
+    if [ ! -d "$repo_path" ]; then
+        log_error "Directory not found after clone: $repo_path"
+        return 1
     fi
 
     cd "$repo_path"
@@ -274,7 +280,6 @@ main() {
         echo ""
 
         clone_or_update_repo "$repo" || continue
-        cd "${REPOS_DIR}/${repo}"
 
         default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@.*/@@' || echo "master")
         target_files=$(get_target_files "$repo")
